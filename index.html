@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seletor de Idioma</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="language-selector" class="custom-dropdown">
+      <svg class="language-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <text x="20" y="40" font-size="32" fill="white" font-family="sans-serif">文</text>
+        <text x="20" y="80" font-size="32" fill="white" font-family="sans-serif">A a</text>
+      </svg>
+      <div class="dropdown-selected" id="dropdown-selected" aria-haspopup="listbox" aria-expanded="false">PT</div>
+        <ul class="dropdown-options" id="dropdown-options" role="listbox" tabindex="-1">
+            <li data-lang="pt" role="option" aria-selected="true" data-full="Português" data-abbr="PT">Português</li>
+            <li data-lang="en" role="option" aria-selected="false" data-full="English" data-abbr="EN">English</li>
+            <li data-lang="es" role="option" aria-selected="false" data-full="Español" data-abbr="ES">Español</li>
+        </ul>
+    </div>
+
+    <!-- Vídeo de fundo -->
+    <video autoplay muted loop id="background-video">
+      <source src="image/fundo.mp4" type="video/mp4" />
+      Seu navegador não suporta vídeo em HTML5.
+    </video>
+
+    <div class="wrapper" id="loginBox">
+      <form action="#">
+        <h2 data-i18n="loginTitle">Login</h2>
+
+        <div class="input-field">
+          <input type="text" required id="email" />
+          <label data-i18n="emailLabel">Enter your email</label>
+        </div>
+
+        <div class="input-field">
+          <input type="password" required id="password" />
+          <label data-i18n="passwordLabel">Enter your password</label>
+        </div>
+
+        <div class="forget">
+          <label for="remember">
+            <input type="checkbox" id="remember" />
+            <p data-i18n="rememberMe">Remember me</p>
+          </label>
+          <a href="#" data-i18n="forgotPassword">Forgot password?</a>
+        </div>
+
+        <button type="submit" data-i18n="loginButton">Log In</button>
+
+        <div class="register">
+          <p>
+            <span data-i18n="noAccount">Don't have an account?</span>
+            <a href="#" data-i18n="registerLink">Register</a>
+          </p>
+        </div>
+      </form>
+    </div>
+
+    <!-- Script para animação e tradução -->
+    <script>
+      const translations = {
+        pt: {
+          loginTitle: "LOGAR",
+          emailLabel: "Digite seu e-mail",
+          passwordLabel: "Digite sua senha",
+          rememberMe: "Lembre-me",
+          forgotPassword: "Esqueceu a senha?",
+          loginButton: "Entrar",
+          noAccount: "Não tem uma conta?",
+          registerLink: "Cadastre-se"
+        },
+        en: {
+          loginTitle: "LOGIN",
+          emailLabel: "Enter your email",
+          passwordLabel: "Enter your password",
+          rememberMe: "Remember me",
+          forgotPassword: "Forgot password?",
+          loginButton: "Log In",
+          noAccount: "Don't have an account?",
+          registerLink: "Register"
+        },
+        es: {
+            loginTitle: "Iniciar sesión",
+            emailLabel: "Introduce tu correo electrónico",
+            passwordLabel: "Introduce tu contraseña",
+            rememberMe: "Recuérdame",
+            forgotPassword: "¿Olvidaste tu contraseña?",
+            loginButton: "Entrar",
+            noAccount: "¿No tienes una cuenta?",
+            registerLink: "Regístrate"
+        }
+      };
+
+      function setLanguage(lang) {
+        document.querySelectorAll("[data-i18n]").forEach(el => {
+          const key = el.getAttribute("data-i18n");
+          if (translations[lang] && translations[lang][key]) {
+            el.textContent = translations[lang][key];
+          }
+        });
+      }
+
+      let currentLang = "pt";
+      setLanguage(currentLang);
+
+      const dropdown = document.getElementById("language-selector");
+      const selected = document.getElementById("dropdown-selected");
+      const options = document.getElementById("dropdown-options");
+
+      selected.addEventListener("click", () => {
+        options.style.display = options.style.display === "block" ? "none" : "block";
+      });
+
+      options.querySelectorAll("li").forEach(li => {
+        li.addEventListener("click", () => {
+          const lang = li.getAttribute("data-lang");
+          selected.textContent = li.textContent;
+          options.style.display = "none";
+          setLanguage(lang);
+        });
+      });
+
+      window.addEventListener("click", (e) => {
+        if (!dropdown.contains(e.target)) {
+          options.style.display = "none";
+        }
+      });
+
+      const box = document.getElementById("loginBox");
+      const video = document.getElementById("background-video");
+      let animating = false;
+
+      box.addEventListener("mouseleave", (e) => {
+        if (animating) return;
+        animating = true;
+
+        const rect = box.getBoundingClientRect();
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+
+        const outLeft = mouseX < rect.left;
+        const outRight = mouseX > rect.right;
+        const outTop = mouseY < rect.top;
+        const outBottom = mouseY > rect.bottom;
+
+        let offsetX = 0;
+        let offsetY = 0;
+        const power = 20;
+
+        if (outLeft) offsetX = power;
+        else if (outRight) offsetX = -power;
+
+        if (outTop) offsetY = power;
+        else if (outBottom) offsetY = -power;
+
+        video.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`;
+      });
+
+      box.addEventListener("mouseenter", () => {
+        video.style.transform = "translate(-50%, -50%)";
+        animating = false;
+      });
+
+      let touchStartX = 0;
+      let touchStartY = 0;
+
+      document.addEventListener("touchstart", function (e) {
+        const touch = e.touches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+      });
+
+      document.addEventListener("touchmove", function (e) {
+        const touch = e.touches[0];
+        const moveX = touch.clientX - touchStartX;
+        const moveY = touch.clientY - touchStartY;
+
+        const power = 20;
+        const offsetX = Math.max(Math.min(moveX, power), -power);
+        const offsetY = Math.max(Math.min(moveY, power), -power);
+
+        video.style.transform = `translate(calc(-50% + ${offsetX}px), calc(-50% + ${offsetY}px))`;
+      });
+
+      document.addEventListener("touchend", function () {
+        video.style.transform = "translate(-50%, -50%)";
+      });
+    </script>
+  </body>
+</html>
