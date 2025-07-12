@@ -21,6 +21,14 @@
 
 ---
 
+## 📽️ Demonstração
+
+Veja o projeto em funcionamento clicando no link abaixo:
+
+🔗 [Acessar demonstração ao vivo](https://minfermis.github.io/glassmorphism-Full-Screen-Background-Video/)
+
+---
+
 ## 🌍 Estrutura de Idiomas (`translations`)
 
 ```js
