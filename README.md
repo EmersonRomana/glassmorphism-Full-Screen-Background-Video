@@ -25,7 +25,7 @@
 
 Veja o projeto em funcionamento clicando no link abaixo:
 
-🔗 [Acessar demonstração ao vivo](https://minfermis.github.io/glassmorphism-Full-Screen-Background-Video/)
+🔗 [Acessar demonstração ao vivo](https://emersonromana.github.io/glassmorphism-Full-Screen-Background-Video/)
 
 ---
 
